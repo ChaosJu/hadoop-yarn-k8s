@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: spark
+  name: spark
+  namespace: hadoop
+spec:
+  clusterIP: None
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spark
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: spark
+  template:
+    metadata:
+      labels:
+        app: spark
+    spec:
+      containers:
+        - imagePullPolicy: Never
+          name: spark
+          image: spark:latest
+          volumeMounts:
+          - mountPath: /work
+            name: spark-work-dir
+      volumes:
+      - name: spark-work-dir
+        hostPath:
+          path: /work
+          type: Directory

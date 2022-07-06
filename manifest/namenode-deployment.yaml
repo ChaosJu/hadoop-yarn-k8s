@@ -1,0 +1,79 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: namenode
+  name: namenode
+  namespace: hadoop
+spec:
+  clusterIP: None
+  ports:
+    - name: "9870"
+      port: 9870
+      targetPort: 9870
+    - name: "9000"
+      port: 9000
+      targetPort: 9000
+    - name: "8020"
+      port: 8020
+      targetPort: 8020
+  selector:
+    app: namenode
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: namenode
+  name: namenode
+  namespace: hadoop
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: namenode
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: namenode
+    spec:
+      terminationGracePeriodSeconds: 0
+      setHostnameAsFQDN: true
+      initContainers:
+        - name: init-volume
+          imagePullPolicy: Never
+          image: hadoop-namenode
+          command: ['sh', '-c', 'cp -r /data/hdfs/* /mnt/pv-content/']
+          volumeMounts:
+           - name: namenode
+             mountPath: "/mnt/pv-content"
+      containers:
+        - imagePullPolicy: Never
+          image: hadoop-namenode
+          name: namenode
+          volumeMounts:
+            - mountPath: /data/hdfs
+              name: namenode
+      restartPolicy: Always
+      dnsPolicy: ClusterFirst
+      volumes:
+        - name: namenode
+          persistentVolumeClaim:
+            claimName: namenode
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  creationTimestamp: null
+  labels:
+    app: namenode
+  name: namenode
+  namespace: hadoop
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
