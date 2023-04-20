@@ -6,7 +6,7 @@ The sandbox can be started with a single command and will bring up a Hadoop YARN
 
 The various web interfaces for the cluster are proxied and exposed on the host machine automatically and can be accessed via the URLs listed below.
 
-> **Warning:**
+> **Warning**
 > The sandbox is intended to be used for testing and development purposes only.
 
 ### Prerequisites
@@ -37,6 +37,17 @@ The various web interfaces for the cluster are proxied and exposed on the host m
     * datanode-4: http://datanode-4.datanode.hadoop.svc.127-0-0-1.nip.io:8042
 * Namenode: http://namenode-0.namenode.hadoop.svc.127-0-0-1.nip.io:9870
 * Resource Manager: http://resourcemanager-0.resourcemanager.hadoop.svc.127-0-0-1.nip.io:8089
+* Spark History Server: http://spark.hadoop.svc.127-0-0-1.nip.io:18080
+
+### Screenshots
+
+| ![DataNode](https://i.imgur.com/PcLl4f4.png) | ![NodeManager](https://i.imgur.com/gR65OSv.png) |
+|:--:|:--:|
+| DataNode | NodeManager |
+| ![NameNode](https://i.imgur.com/RSJHLyp.png) | ![ResourceManager](https://i.imgur.com/CJ4LXjY.png) |
+| NameNode | ResourceManager |
+| ![Spark History Server](https://i.imgur.com/JTQwd0d.png) | ![Spark UI](https://i.imgur.com/PaB6Jze.png) |
+| Spark History Server | Spark UI |
 
 ### Roadmap
 - [ ] Add support for running HDFS commands using `dfsadmin`
