@@ -1,0 +1,94 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: hadoop-conf
+  namespace: hadoop
+data:
+  core-site.xml: |
+    <configuration>
+      <property>
+        <name>fs.defaultFS</name>
+        <value>hdfs://namenode-0.namenode.hadoop.svc.127-0-0-1.nip.io:9000</value>
+      </property>
+      <property>
+        <name>hadoop.http.filter.initializers</name>
+        <value>org.apache.hadoop.security.HttpCrossOriginFilterInitializer</value>
+      </property>
+      <property>
+        <name>hadoop.http.cross-origin.enabled</name>
+        <value>true</value>
+      </property>
+      <property>
+        <name>hadoop.http.cross-origin.allowed-methods</name>
+        <value>GET,POST,HEAD,DELETE,PUT,OPTIONS</value>
+      </property>
+      <property>
+        <name>hadoop.http.staticuser.user</name>
+        <value>hadoop</value>
+      </property>
+    </configuration>
+  hdfs-site.xml: |
+    <configuration>
+      <property>
+        <name>dfs.datanode.use.datanode.hostname</name>
+        <value>false</value>
+      </property>
+      <property>
+        <name>dfs.client.use.datanode.hostname</name>
+        <value>false</value>
+      </property>
+      <property>
+        <name>dfs.replication</name>
+        <value>1</value>
+      </property>
+      <property>
+        <name>dfs.datanode.data.dir</name>
+        <value>file:///data/hdfs/datanode</value>
+      </property>
+      <property>
+        <name>dfs.namenode.name.dir</name>
+        <value>file:///data/hdfs/namenode</value>
+      </property>
+      <property>
+        <name>hadoop.http.staticuser.user</name>
+        <value>hadoop</value>
+      </property>
+      <property>
+        <name>dfs.namenode.datanode.registration.ip-hostname-check</name>
+        <value>false</value>
+      </property>
+      <property>
+        <name>dfs.permissions</name>
+        <value>false</value>
+      </property>
+    </configuration>
+  yarn-site.xml: |
+    <configuration>
+      <property>
+        <name>yarn.nodemanager.aux-services</name>
+        <value>mapreduce_shuffle</value>
+      </property>
+      <property>
+        <name>yarn.resourcemanager.bind-host</name>
+        <value>0.0.0.0</value>
+      </property>
+      <property>
+        <name>yarn.resourcemanager.hostname</name>
+        <value>resourcemanager-0.resourcemanager.hadoop.svc.127-0-0-1.nip.io</value>
+      </property>
+      <property>
+        <name>yarn.resourcemanager.webapp.address</name>
+        <value>resourcemanager-0.resourcemanager.hadoop.svc.127-0-0-1.nip.io:8089</value>
+      </property>
+    </configuration>
+  mapred-site.xml: |
+    <configuration>
+      <property>
+        <name>mapreduce.framework.name</name>
+        <value>yarn</value>
+      </property>
+    </configuration>
+  hadoop-env.sh: |
+    export ARCH=$(dpkg --print-architecture)
+    export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-$ARCH
+    export HADOOP_CONF_DIR=/usr/local/hadoop-3.3.3/etc/hadoop

@@ -1,4 +1,4 @@
-FROM debian:bookworm-slim
+FROM debian:bullseye-slim
 
 ENV HADOOP_VERSION 3.3.3
 
@@ -36,5 +36,3 @@ ENV USER hadoop
 RUN ssh-keygen -t rsa -P '' -f ~/.ssh/id_rsa && \
     cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys && \
     chmod 0600 ~/.ssh/authorized_keys
-
-COPY --chown=hadoop:hadoop config/* ${HADOOP_HOME}/etc/hadoop/

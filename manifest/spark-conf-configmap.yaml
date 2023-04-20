@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: spark-conf
+  namespace: hadoop
+data:
+  spark-defaults.conf: |
+    spark.yarn.historyServer.address        spark.hadoop.svc.127-0-0-1.nip.io:18080
+    spark.yarn.historyServer.allowTracking  true
+    spark.eventLog.dir                      hdfs:///logs
+    spark.eventLog.enabled                  true
+    spark.history.fs.logDirectory           hdfs:///logs
+    spark.ui.view.acls                      hadoop
+    spark.ui.filters                        org.apache.spark.deploy.yarn.YarnProxyRedirectFilter
+  spark-env.sh: |
+    export HADOOP_CONF_DIR=/etc/hadoop/
+    export SPARK_PUBLIC_DNS=spark.hadoop.svc.127-0-0-1.nip.io
+    export SPARK_LOCAL_IP=spark.hadoop.svc.127-0-0-1.nip.io

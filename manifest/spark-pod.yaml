@@ -7,30 +7,67 @@ metadata:
   namespace: hadoop
 spec:
   clusterIP: None
+  selector:
+    app: spark
 ---
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: v1
+kind: Pod
 metadata:
   name: spark
+  namespace: hadoop
+  labels:
+    app: spark
 spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: spark
-  template:
-    metadata:
-      labels:
-        app: spark
-    spec:
-      containers:
-        - imagePullPolicy: Never
-          name: spark
-          image: spark:latest
-          volumeMounts:
-          - mountPath: /work
-            name: spark-work-dir
-      volumes:
-      - name: spark-work-dir
-        hostPath:
-          path: /work
-          type: Directory
+  containers:
+    - name: spark
+      image: spark:latest
+      imagePullPolicy: Never
+      volumeMounts:
+        - mountPath: /work
+          name: spark-work-dir
+        - name: hadoop-conf
+          mountPath: "/etc/hadoop/core-site.xml"
+          subPath: core-site.xml
+          readOnly: true
+        - name: hadoop-conf
+          mountPath: "/etc/hadoop/hdfs-site.xml"
+          subPath: hdfs-site.xml
+          readOnly: true
+        - name: hadoop-conf
+          mountPath: "/etc/hadoop/yarn-site.xml"
+          subPath: yarn-site.xml
+          readOnly: true
+        - name: hadoop-conf
+          mountPath: "/etc/hadoop/mapred-site.xml"
+          subPath: mapred-site.xml
+          readOnly: true
+        - name: hadoop-conf
+          mountPath: "/etc/hadoop/hadoop-env.sh"
+          subPath: hadoop-env.sh
+          readOnly: true
+        - name: spark-conf
+          mountPath: "/opt/spark/conf/spark-defaults.conf"
+          subPath: spark-defaults.conf
+          readOnly: true
+        - name: spark-conf
+          mountPath: "/opt/spark/conf/spark-env.sh"
+          subPath: spark-env.sh
+          readOnly: true
+  volumes:
+    - name: spark-work-dir
+      hostPath:
+        path: /work
+        type: Directory
+    - name: hadoop-conf
+      configMap:
+        name: hadoop-conf
+    - name: spark-conf
+      configMap:
+        name: spark-conf
+  initContainers:
+    - name: init-namenode
+      image: busybox
+      command: ['sh', '-c', "until nslookup namenode-0.namenode.hadoop.svc.127-0-0-1.nip.io; do echo Waiting for namenode to come online; sleep 2; done"]
+  terminationGracePeriodSeconds: 0
+  setHostnameAsFQDN: true
+  dnsPolicy: ClusterFirst
