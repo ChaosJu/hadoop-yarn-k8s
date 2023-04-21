@@ -23,6 +23,10 @@ data:
         <value>GET,POST,HEAD,DELETE,PUT,OPTIONS</value>
       </property>
       <property>
+        <name>hadoop.http.cross-origin.allowed-origins</name>
+        <value>http://resourcemanager-0.resourcemanager.hadoop.svc.127-0-0-1.nip.io:8089</value>
+      </property>
+      <property>
         <name>hadoop.http.staticuser.user</name>
         <value>hadoop</value>
       </property>
@@ -79,6 +83,22 @@ data:
       <property>
         <name>yarn.resourcemanager.webapp.address</name>
         <value>resourcemanager-0.resourcemanager.hadoop.svc.127-0-0-1.nip.io:8089</value>
+      </property>
+      <property>
+        <name>yarn.webapp.ui2.enable</name>
+        <value>true</value>
+      </property>
+      <property>
+        <name>yarn.timeline-service.http-cross-origin.enabled</name>
+        <value>true</value>
+      </property>
+      <property>
+        <name>yarn.resourcemanager.webapp.cross-origin.enabled</name>
+        <value>true</value>
+      </property>
+      <property>
+        <name>yarn.nodemanager.webapp.cross-origin.enabled</name>
+        <value>true</value>
       </property>
     </configuration>
   mapred-site.xml: |

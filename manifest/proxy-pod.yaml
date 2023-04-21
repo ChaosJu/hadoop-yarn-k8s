@@ -70,6 +70,7 @@ data:
 
     Include conf/extra/httpd-mpm.conf
 
+    Listen 4040
     Listen 9864
     Listen 9870
     Listen 8042
@@ -118,6 +119,12 @@ data:
         ServerName spark.hadoop.svc.127-0-0-1.nip.io
         ProxyPass        / http://spark:18080/
         ProxyPassReverse / http://spark:18080/
+    </VirtualHost>
+
+    <VirtualHost *:4040>
+        ServerName spark.hadoop.svc.127-0-0-1.nip.io
+        ProxyPass        / http://spark:4040/
+        ProxyPassReverse / http://spark:4040/
     </VirtualHost>
 ---
 apiVersion: v1
