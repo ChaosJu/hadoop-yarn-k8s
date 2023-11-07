@@ -2,13 +2,16 @@ FROM debian:bullseye-slim
 
 ENV HADOOP_VERSION 3.3.3
 
+RUN sed -i 's/deb.debian.org/mirrors.ustc.edu.cn/g' /etc/apt/sources.list
+RUN sed -i 's/security.debian.org/mirrors.ustc.edu.cn/g' /etc/apt/sources.list
+
 RUN apt-get update && \
     apt-get install --no-install-recommends -y \
         openjdk-11-jre-headless \
         ssh \
         wget \
         pdsh && \
-    wget --progress=dot:giga https://dlcdn.apache.org/hadoop/common/hadoop-${HADOOP_VERSION}/hadoop-${HADOOP_VERSION}.tar.gz -O /tmp/hadoop.tar.gz && \
+    wget --progress=dot:giga https://mirrors.cloud.tencent.com/apache/hadoop/common/hadoop-${HADOOP_VERSION}/hadoop-${HADOOP_VERSION}.tar.gz -O /tmp/hadoop.tar.gz && \
     tar -xzf /tmp/hadoop.tar.gz -C /usr/local && \
     rm -f /tmp/hadoop.tar.gz && \
     apt-get remove -y --purge wget && \

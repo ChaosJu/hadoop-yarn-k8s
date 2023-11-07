@@ -1,0 +1,79 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nodemanager 
+  labels:
+    app: nodemanager 
+  namespace: hadoop
+spec:
+  clusterIP: None
+  ports:
+    - name: "9864"
+      port: 9864
+      targetPort: 9864
+    - name: "8042"
+      port: 8042
+      targetPort: 8042
+  selector:
+    app: nodemanager 
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: nodemanager
+  namespace: hadoop
+spec:
+  selector:
+    matchLabels:
+      app: nodemanager
+  serviceName: nodemanager
+  replicas: 2
+  updateStrategy:
+    type: RollingUpdate
+  podManagementPolicy: Parallel
+  template:
+    metadata:
+      labels:
+        app: nodemanager
+    spec:
+      terminationGracePeriodSeconds: 0
+      setHostnameAsFQDN: true
+      containers:
+        - imagePullPolicy: Never
+          image: hadoop-nodemanager
+          name: nodemanager
+          volumeMounts:
+            - mountPath: /data/hdfs
+              name: nodemanager-data
+            - name: hadoop-conf
+              mountPath: "/etc/hadoop/core-site.xml"
+              subPath: core-site.xml
+              readOnly: true
+            - name: hadoop-conf
+              mountPath: "/etc/hadoop/hdfs-site.xml"
+              subPath: hdfs-site.xml
+              readOnly: true
+            - name: hadoop-conf
+              mountPath: "/etc/hadoop/yarn-site.xml"
+              subPath: yarn-site.xml
+              readOnly: true
+            - name: hadoop-conf
+              mountPath: "/etc/hadoop/mapred-site.xml"
+              subPath: mapred-site.xml
+              readOnly: true
+            - name: hadoop-conf
+              mountPath: "/etc/hadoop/hadoop-env.sh"
+              subPath: hadoop-env.sh
+              readOnly: true
+      volumes:
+        - name: hadoop-conf
+          configMap:
+            name: hadoop-conf
+  volumeClaimTemplates:
+    - metadata:
+        name: nodemanager-data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 500Mi
