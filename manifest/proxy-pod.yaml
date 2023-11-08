@@ -76,6 +76,8 @@ data:
     Listen 8042
     Listen 8089
     Listen 18080
+    Listen 9999 
+    Listen 9998
 
     <VirtualHost *:9864>
         ServerName datanode.hadoop.svc.127-0-0-1.nip.io
@@ -113,6 +115,18 @@ data:
         ServerName resourcemanager-0.resourcemanager.hadoop.svc.127-0-0-1.nip.io
         ProxyPass        / http://resourcemanager-0.resourcemanager:8089/
         ProxyPassReverse / http://resourcemanager-0.resourcemanager:8089/
+    </VirtualHost>
+
+    <VirtualHost *:9999>
+        ServerName namenode-0.namenode.hadoop.svc.127-0-0-1.nip.io
+        ProxyPass        / http://namenode-0.namenode:9999/
+        ProxyPassReverse / http://namenode-0.namenode:9999/
+    </VirtualHost>
+
+    <VirtualHost *:9998>
+        ServerName resourcemanager-0.resourcemanager.hadoop.svc.127-0-0-1.nip.io
+        ProxyPass        / http://resourcemanager-0.resourcemanager:9998/
+        ProxyPassReverse / http://resourcemanager-0.resourcemanager:9998/
     </VirtualHost>
 
     <VirtualHost *:18080>
@@ -198,5 +212,13 @@ spec:
       port: 4042
       targetPort: 4042
       nodePort: 4042
+    - name: "9999"
+      port: 9999
+      targetPort: 9999
+      nodePort: 9999
+    - name: "9998"
+      port: 9998
+      targetPort: 9998
+      nodePort: 9998
   selector:
     app: proxy

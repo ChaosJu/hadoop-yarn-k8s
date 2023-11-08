@@ -11,6 +11,9 @@ spec:
     - name: "8089"
       port: 8089
       targetPort: 8089
+    - name: "9998"
+      port: 9998
+      targetPort: 9998
   selector:
     app: resourcemanager
 ---

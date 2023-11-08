@@ -112,3 +112,5 @@ data:
     export ARCH=$(dpkg --print-architecture)
     export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-$ARCH
     export HADOOP_CONF_DIR=/usr/local/hadoop-3.3.3/etc/hadoop
+    export HADOOP_NAMENODE_OPTS="$HADOOP_NAMENODE_OPTS -javaagent:/usr/local/hadoop-3.3.3/jmx_prometheus_javaagent-0.19.0.jar=9999:/usr/local/hadoop-3.3.3/jmx_exporter/prometheus_config.yml"
+    export YARN_RESOURCEMANAGER_OPTS="$YARN_RESOURCEMANAGER_OPTS -javaagent:/usr/local/hadoop-3.3.3/jmx_prometheus_javaagent-0.19.0.jar=9998:/usr/local/hadoop-3.3.3/jmx_exporter/prometheus_config.yml"

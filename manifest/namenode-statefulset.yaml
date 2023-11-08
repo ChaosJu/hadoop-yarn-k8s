@@ -17,6 +17,9 @@ spec:
     - name: "8020"
       port: 8020
       targetPort: 8020
+    - name: "9999"
+      port: 9999
+      targetPort: 9999
   selector:
     app: namenode
 ---
