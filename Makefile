@@ -2,7 +2,11 @@
 BLUE := $(shell tput setaf 6)
 CLEAR := $(shell tput sgr0)
 
-deploy: build_images mount_work deploy_hadoop_namespace deploy_hadoop_conf_configmap  deploy_datanode_statefulset deploy_namenode_statefulset deploy_nodemanager_statefulset  deploy_resourcemanager_statefulset deploy_proxy_pod deploy_spark_conf_configmap deploy_spark_pod 
+all: build_images mount_work deploy_hadoop_namespace deploy_hadoop_conf_configmap  deploy_datanode_statefulset deploy_namenode_statefulset deploy_nodemanager_statefulset  deploy_resourcemanager_statefulset deploy_proxy_pod deploy_spark_conf_configmap deploy_spark_pod 
+
+build:  build_images
+
+deploy: deploy_hadoop_namespace deploy_hadoop_conf_configmap deploy_datanode_statefulset deploy_namenode_statefulset deploy_nodemanager_statefulset deploy_resourcemanager_statefulset deploy_proxy_pod
 
 clean:
 	kubectl delete all --all || true
@@ -89,7 +93,7 @@ mount_work:
 	mkdir -p .deployment
 	@echo "$(BLUE)Starting minikube...$(CLEAR)"
 	#minikube start --driver docker --force --extra-config=apiserver.service-node-port-range=1-65535 --dns-domain 127-0-0-1.nip.io  --ports 127.0.0.1:9864:9864,127.0.0.1:9870:9870,127.0.0.1:8020:8020,127.0.0.1:8042:8042,127.0.0.1:8089:8089,127.0.0.1:18080:18080,127.0.0.1:4040-4050:4040-4050 --cpus 2 --memory 3072
-	minikube start --driver docker --force --extra-config=apiserver.service-node-port-range=1-65535 --dns-domain 127-0-0-1.nip.io  --ports 9998:9998,9999:9999,9864:9864,9870:9870,8020:8020,8042:8042,8089:8089,18080:18080,4040-4050:4040-4050 --cpus 2 --memory 3072
+	minikube start --image-mirror-country=cn  --addons=metrics-server --driver docker --force --extra-config=apiserver.service-node-port-range=1-65535 --dns-domain 127-0-0-1.nip.io  --ports 9998:9998,9999:9999,9864:9864,9870:9870,8020:8020,8042:8042,8089:8089,18080:18080,4040-4050:4040-4050 --cpus 2 --memory 3072
 	@echo "$(BLUE)Starting minikube...done$(CLEAR)"
 	touch .deployment/minikube_start
 

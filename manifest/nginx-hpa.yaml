@@ -1,0 +1,63 @@
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: hap-nginx
+spec:
+  maxReplicas: 10 
+  minReplicas: 1 
+  metrics:
+  - resource:
+      name: cpu
+      target:
+        averageUtilization: 40
+        type: Utilization
+    type: Resource
+  - resource:
+      name: memory
+      target:
+        averageUtilization: 40
+        type: Utilization
+    type: Resource
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: hap-nginx
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hap-nginx
+spec:
+  type: NodePort
+  ports:
+    - name: "http"
+      port: 80
+      targetPort: 80
+      nodePort: 30080
+  selector:
+    service: hap-nginx
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hap-nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: hap-nginx
+  template:
+    metadata:
+      labels:
+        service: hap-nginx
+    spec:
+      containers:
+        - name: hap-nginx
+          image: nginx:latest
+          resources:
+            requests:
+              cpu: 100m
+              memory: 100Mi
+            limits:
+              cpu: 200m
+              memory: 200Mi

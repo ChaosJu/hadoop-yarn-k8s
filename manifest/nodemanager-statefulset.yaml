@@ -27,7 +27,7 @@ spec:
     matchLabels:
       app: nodemanager
   serviceName: nodemanager
-  replicas: 2
+  replicas: 1 
   updateStrategy:
     type: RollingUpdate
   podManagementPolicy: Parallel
@@ -42,6 +42,13 @@ spec:
         - imagePullPolicy: Never
           image: hadoop-nodemanager
           name: nodemanager
+          resources:
+            requests:
+              cpu: 100m
+              memory: 100Mi
+            limits:
+              cpu: 400m
+              memory: 400Mi
           volumeMounts:
             - mountPath: /data/hdfs
               name: nodemanager-data

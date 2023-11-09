@@ -27,7 +27,7 @@ spec:
     matchLabels:
       app: datanode
   serviceName: datanode
-  replicas: 2
+  replicas: 1
   updateStrategy:
     type: RollingUpdate
   podManagementPolicy: Parallel
