@@ -42,6 +42,13 @@ spec:
         - imagePullPolicy: Never
           image: hadoop-datanode
           name: datanode
+          resources:
+            requests:
+              cpu: 100m
+              memory: 100Mi
+            limits:
+              cpu: 400m
+              memory: 400Mi
           volumeMounts:
             - mountPath: /data/hdfs
               name: datanode-data
